@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Точка Свободы | Конструктор отпуска</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background: linear-gradient(135deg, #32CD32 0%, #00CED1 100%); 
+            background-attachment: fixed;
+            color: #1a202c; padding: 20px; margin: 0;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+        }
+        .container { 
+            max-width: 500px; width: 100%; background: rgba(255, 255, 255, 0.95); 
+            padding: 30px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
+        }
+        h1 { color: #2d3748; text-align: center; font-size: 28px; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #718096; font-size: 14px; margin-bottom: 30px; }
+        .service-item { display: flex; align-items: center; padding: 14px 0; border-bottom: 1px solid #edf2f7; cursor: pointer; }
+        .service-item input { margin-right: 15px; width: 22px; height: 22px; accent-color: #38a169; }
+        .service-name { flex-grow: 1; font-size: 16px; font-weight: 500; }
+        .service-price { font-weight: 700; color: #2d3748; }
+        .total-box { background: #f7fafc; padding: 25px; border-radius: 20px; margin-top: 30px; border: 1px solid #e2e8f0; }
+        .total-text { font-size: 1.6em; font-weight: 800; text-align: right; color: #2d3748; margin-bottom: 15px; }
+        .offer-section { font-size: 13px; color: #4a5568; display: flex; align-items: flex-start; line-height: 1.4; gap: 10px;}
+        .btn-pay { display: block; width: 100%; padding: 18px; background: #2d3748; color: white; border: none; border-radius: 15px; font-size: 18px; font-weight: 700; margin-top: 25px; cursor: pointer; }
+        .btn-pay:disabled { background: #a0aec0; cursor: not-allowed; }
+        a { color: #3182ce; text-decoration: underline; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Точка Свободы 🕊️</h1>
+    <div class="subtitle">Ваш конструктор честного отпуска</div>
+
+    <div id="price-list">
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="1500"><span class="service-name">Аудит отеля</span><span class="service-price">1 500 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="3500"><span class="service-name">Подбор 3-х отелей</span><span class="service-price">3 500 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="1500"><span class="service-name">Поиск перелета</span><span class="service-price">1 500 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="5000"><span class="service-name">Ассистент бронирования</span><span class="service-price">5 000 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="1000"><span class="service-name">Подбор страховки</span><span class="service-price">1 000 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="500"><span class="service-name">Инструкция «ЧП»</span><span class="service-price">500 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="1000"><span class="service-name">Маршрут «Первой мили»</span><span class="service-price">1 000 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="2000"><span class="service-name">Гайд по локации</span><span class="service-price">2 000 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="10000"><span class="service-name">Куратор (7 дней)</span><span class="service-price">10 000 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="30000"><span class="service-name">Полное сопровождение</span><span class="service-price">30 000 ₽</span></label></div>
+    </div>
+
+    <div class="total-box">
+        <div class="total-text">Итого: <span id="amount">0</span> ₽</div>
+        <div class="offer-section">
+            <input type="checkbox" id="confirm"> 
+            <span>Я согласен(а) с условиями <a href="https://ru.docworkspace.com/d/sIGDhg4S0AteFos4G?sa=601.1037" target="_blank">Договора-оферты</a></span>
+        </div>
+    </div>
+
+    <!-- Исправленная кнопка -->
+    <button id="pay-btn" class="btn-pay" disabled onclick="sendToTelegram()">Заказать через Telegram</button>
+</div>
+
+<script>
+    const checks = document.querySelectorAll('.service');
+    const totalDisplay = document.getElementById('amount');
+    const confirmCheck = document.getElementById('confirm');
+    const payBtn = document.getElementById('pay-btn');
+
+    // Считаем сумму
+    function updatePrice() {
+        let total = 0;
+        checks.forEach(c => { if(c.checked) total += parseInt(c.dataset.price); });
+        totalDisplay.innerText = total.toLocaleString('ru-RU');
+    }
+
+    // Функция отправки (ОТПРАВЛЯЕТ ВАМ ЗАКАЗ)
+    function sendToTelegram() {
+        let selected = [];
+        let total = 0;
+        
+        checks.forEach(c => { 
+            if(c.checked) {
+                // Ищем текст внутри родительского элемента
+                let name = c.parentElement.querySelector('.service-name').innerText;
+                selected.push(name);
+                total += parseInt(c.dataset.price);
+            }
+        });
+
+        const messageText = "Здравствуйте, Надежда! Мой заказ в Точке Свободы:\n- " + selected.join('\n- ') + "\n\nИтого: " + total + " руб.\nС Офертой согласен(а).";
+        const encodedMessage = encodeURIComponent(messageText);
+        
+        // ВАШ НИК NM_13_31
+        window.location.href = "https://NM_13_31" + encodedMessage;
+    }
+
+    checks.forEach(c => c.addEventListener('change', updatePrice));
+    confirmCheck.addEventListener('change', () => payBtn.disabled = !confirmCheck.checked);
+</script>
+
+</body>
+</html>
