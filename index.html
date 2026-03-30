@@ -3,101 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Точка Свободы | Конструктор отпуска</title>
+    <title>Вкус Свободы | Конструктор услуг</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background: linear-gradient(135deg, #32CD32 0%, #00CED1 100%); 
-            background-attachment: fixed;
-            color: #1a202c; padding: 20px; margin: 0;
-            min-height: 100vh; display: flex; align-items: center; justify-content: center;
-        }
-        .container { 
-            max-width: 500px; width: 100%; background: rgba(255, 255, 255, 0.95); 
-            padding: 30px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
-        }
-        h1 { color: #2d3748; text-align: center; font-size: 28px; margin-bottom: 5px; }
-        .subtitle { text-align: center; color: #718096; font-size: 14px; margin-bottom: 30px; }
-        .service-item { display: flex; align-items: center; padding: 14px 0; border-bottom: 1px solid #edf2f7; cursor: pointer; }
-        .service-item input { margin-right: 15px; width: 22px; height: 22px; accent-color: #38a169; }
-        .service-name { flex-grow: 1; font-size: 16px; font-weight: 500; }
-        .service-price { font-weight: 700; color: #2d3748; }
-        .total-box { background: #f7fafc; padding: 25px; border-radius: 20px; margin-top: 30px; border: 1px solid #e2e8f0; }
-        .total-text { font-size: 1.6em; font-weight: 800; text-align: right; color: #2d3748; margin-bottom: 15px; }
-        .offer-section { font-size: 13px; color: #4a5568; display: flex; align-items: flex-start; line-height: 1.4; gap: 10px;}
-        .btn-pay { display: block; width: 100%; padding: 18px; background: #2d3748; color: white; border: none; border-radius: 15px; font-size: 18px; font-weight: 700; margin-top: 25px; cursor: pointer; }
-        .btn-pay:disabled { background: #a0aec0; cursor: not-allowed; }
-        a { color: #3182ce; text-decoration: underline; font-weight: 600; }
-    </style>
-</head>
-<body>
+    body { 
+        font-family: 'Segoe UI', Roboto, sans-serif; 
+        background: linear-gradient(135deg, #32CD32 0%, #00CED1 100%); 
+        background-attachment: fixed;
+        margin: 0; min-height: 100vh;
+        display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+
+    .container { 
+        max-width: 500px; width: 100%;
+        background: linear-gradient(to bottom, 
+                    rgba(255, 255, 255, 1) 0%, 
+                    rgba(255, 255, 255, 1) 40%, 
+                    rgba(255, 255, 255, 0.2) 100%), 
+                    url('more.png'); 
+        background-size: cover;
+        background-position: bottom center;
+        background-repeat: no-repeat;
+        background-color: #ffffff;
+        padding: 30px; border-radius: 30px; 
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        overflow: hidden;
+    }
+
+    h1 { color: #2d3748; text-align: center; margin-bottom: 5px; }
+    .subtitle { text-align: center; color: #718096; font-size: 14px; margin-bottom: 25px; }
+
+    /* Стиль элементов списка */
+    .service-item { 
+        display: flex; align-items: center; padding: 12px 0; 
+        border-bottom: 1px solid #edf2f7; cursor: pointer; 
+    }
+    .service-item input { width: 22px; height: 22px; margin-right: 15px; accent-color: #00CED1; }
+    .service-name { flex-grow: 1; font-weight: 500; color: #4a5568; }
+    .service-price { font-weight: 700; color: #2d3748; }
+
+    /* Поле ввода контакта — в один стиль */
+    .contact-input { 
+        width: 100%; height: 48px; border-radius: 15px; 
+        border: 2px solid #e2e8f0; padding: 0 15px; box-sizing: border-box; 
+        font-size: 16px; transition: 0.3s; background: rgba(255, 255, 255, 0.7);
+        margin-top: 10px;
+    }
+    .contact-input:focus { border-color: #00CED1; outline: none; background: #fff; }
+    .contact-label { 
+        display: block; 
+        font-size: 12px; /* Размер меньше */
+        color: #4a5568; 
+        text-align: center; /* По центру */
+        margin-bottom: 5px; 
+        font-weight: 600; 
+        width: 100%;
+    }
+    .total-box { 
+    /* Тонкий песочный оттенок с высокой прозрачностью (как у анкеты) */
+    background: rgba(244, 226, 198, 0.1); 
+    padding: 20px; 
+    border-radius: 20px; 
+    margin-top: 25px; 
+    
+    /* Пунктирная коричневая рамка */
+    border: 2px dashed #8B4513; 
+
+}
+
+/* Сделаем текст "Итого" темно-коричневым для контраста */
+.total-text { 
+    font-size: 1.5em; 
+    font-weight: 800; 
+    text-align: right; 
+    color: #5D4037; 
+    margin-bottom: 10px; 
+}
+
+    .total-text { font-size: 1.5em; font-weight: 800; text-align: right; color: #2d3748; margin-bottom: 10px; }
+    
+    .offer-section { font-size: 13px; color: #4a5568; display: flex; align-items: flex-start; }
+    .offer-section input { margin-top: 3px; margin-right: 10px; accent-color: #00CED1; }
+
+    /* ГЛАВНАЯ ЯРКАЯ КНОПКА */
+    .btn-pay { 
+        display: block; width: 100%; padding: 18px; 
+        background: linear-gradient(135deg, #32CD32 0%, #00CED1 100%); 
+        color: white; border: none;
+        border-radius: 20px; font-size: 18px; font-weight: 700; 
+        margin-top: 20px; cursor: pointer; transition: 0.3s;
+        box-shadow: 0 10px 20px rgba(0, 206, 209, 0.2);
+    }
+    .btn-pay:hover:not(:disabled) { 
+        transform: translateY(-2px); 
+        box-shadow: 0 15px 25px rgba(0, 206, 209, 0.3);
+        filter: brightness(1.05);
+    }
+    .btn-pay:disabled { 
+        background: #cbd5e0; 
+        box-shadow: none; 
+        cursor: not-allowed; 
+    }
+
+    a { color: #3182ce; text-decoration: underline; }
+
+    .status {
+        margin-top: 15px; padding: 12px; border-radius: 12px;
+        text-align: center; font-size: 14px; display: none;
+    }
+    .status.success { background: #c6f6d5; color: #22543d; display: block; }
+    .status.error { background: #fed7d7; color: #742a2a; display: block; }
+</style>
 
 <div class="container">
-    <h1>Точка Свободы 🕊️</h1>
-    <div class="subtitle">Ваш конструктор честного отпуска</div>
+    <h1>Вкус Свободы 🌍</h1>
+    <div class="subtitle"> Выбирайте, какая услуга вам необходима прямо сейчас...</div>
 
     <div id="price-list">
-        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="1500"><span class="service-name">Аудит отеля</span><span class="service-price">1 500 ₽</span></label></div>
-        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="3500"><span class="service-name">Подбор 3-х отелей</span><span class="service-price">3 500 ₽</span></label></div>
-        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="1500"><span class="service-name">Поиск перелета</span><span class="service-price">1 500 ₽</span></label></div>
-        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="5000"><span class="service-name">Ассистент бронирования</span><span class="service-price">5 000 ₽</span></label></div>
-        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="1000"><span class="service-name">Подбор страховки</span><span class="service-price">1 000 ₽</span></label></div>
-        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="500"><span class="service-name">Инструкция «ЧП»</span><span class="service-price">500 ₽</span></label></div>
-        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="1000"><span class="service-name">Маршрут «Первой мили»</span><span class="service-price">1 000 ₽</span></label></div>
-        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="2000"><span class="service-name">Гайд по локации</span><span class="service-price">2 000 ₽</span></label></div>
-        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="10000"><span class="service-name">Куратор (7 дней)</span><span class="service-price">10 000 ₽</span></label></div>
-        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-price="30000"><span class="service-name">Полное сопровождение</span><span class="service-price">30 000 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-name="Инструкция ЧП" data-price="500"><span class="service-name">Инструкция «ЧП в отпуске»</span><span class="service-price">500 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-name="Маршрут мили" data-price="1000"><span class="service-name">Маршрут «Первой мили» из точки А в точку В</span><span class="service-price">1 000 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-name="Подбор страховки" data-price="1000"><span class="service-name">Подбор страхового полиса</span><span class="service-price">1 000 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-name="Поиск перелета" data-price="1500"><span class="service-name">Анализ и подбор перелета</span><span class="service-price">1 500 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-name="Анализ и аудит" data-price="1500"><span class="service-name">Анализ и аудит</span><span class="service-price">2 500 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-name="Подбор вариантов отеля" data-price="3500"><span class="service-name">Подбор вариантов отеля по ТЗ</span><span class="service-price">3 500 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-name="Ассистент бронирования" data-price="5000"><span class="service-name">Тех. ассистент при бронировании</span><span class="service-price">5 000 ₽</span></label></div>
+        
     </div>
+<!-- ВСТАВЛЯЕМ БЛОК С АНКЕТОЙ ТУТ -->
+    <div style="margin-top: 20px; padding: 15px; background: rgba(49, 130, 206, 0.1); border-radius: 15px; border: 1px dashed #3182ce;">
+        <p style="margin: 0 0 10px 0; font-size: 13px; color: #2c5282; text-align: center; font-weight: 600;">
+            ✈️ Для более качественного оказания услуги, заполните анкету:
+        </p>
+        <a href="https://forms.gle/BePKrmQsfBxxudpn9" target="_blank" style="display: block; text-align: center; background: #3182ce; color: white; padding: 10px; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 700; transition: 0.3s;">
+            📋 Заполнить анкету путешественника
+        </a>
+    </div>
+
+    <div style="margin-top: 20px; text-align: center;">
+    <span style="display: block; font-size: 14px; color: #4a5568; margin-bottom: 10px; font-weight: 600;">
+        Ваш контакт (Telegram @ник или телефон):
+    </span>
+    <input type="text" id="user-contact" placeholder="@username или +7..." required 
+           style="width: 100%; height: 48px; border-radius: 20px; 
+                  background: rgba(255, 255, 255, 0.4); 
+                  border: 2px dashed #ffffff; 
+                  padding: 0 15px; box-sizing: border-box; 
+                  font-size: 16px; color: #2d3748;
+                  outline: none;">
+</div>
 
     <div class="total-box">
         <div class="total-text">Итого: <span id="amount">0</span> ₽</div>
-        <div class="offer-section">
-            <input type="checkbox" id="confirm"> 
-            <span>Я согласен(а) с условиями <a href="https://ru.docworkspace.com/d/sIGDhg4S0AteFos4G?sa=601.1037" target="_blank">Договора-оферты</a></span>
-        </div>
+<div class="offer-section">
+    <input type="checkbox" id="confirm"> 
+    <span>
+        Я принимаю условия 
+        <a href="https://drive.google.com/file/d/1-G_qXWUpKvo90u8zdBT_Y7G93nymcMbQ/view?usp=sharing" target="_blank">Публичной оферты</a> 
+        и даю 
+        <a href="https://drive.google.com/file/d/1Q9ACUTrDQ3Tmcfo2PlKc2WYHCrmMRxTJ/view?usp=sharing" target="_blank">согласие на обработку персональных данных</a>.
+    </span>
+</div>
     </div>
 
-    <!-- Исправленная кнопка -->
-    <button id="pay-btn" class="btn-pay" disabled onclick="sendToTelegram()">Заказать через Telegram</button>
+    <button id="pay-btn" class="btn-pay" disabled>Предварительный заказ</button>
+    <div id="status" class="status"></div>
 </div>
 
+<script src="config.js"></script>
+
+<script src="config.js"></script> <!-- Подключаем ваши секретные данные -->
+
 <script>
+    // Берем данные из файла config.js
+    const BOT_TOKEN = CONFIG.BOT_TOKEN;
+    const CHANNEL_ID = CONFIG.CHANNEL_ID;
+    
     const checks = document.querySelectorAll('.service');
     const totalDisplay = document.getElementById('amount');
     const confirmCheck = document.getElementById('confirm');
     const payBtn = document.getElementById('pay-btn');
-
-    // Считаем сумму
-    function updatePrice() {
+    const statusDiv = document.getElementById('status');
+    
+    function showStatus(message, type) {
+        statusDiv.className = `status ${type}`;
+        statusDiv.textContent = message;
+        setTimeout(() => {
+            statusDiv.className = 'status';
+        }, 5000);
+    }
+    
+        function updatePrice() {
         let total = 0;
         checks.forEach(c => { if(c.checked) total += parseInt(c.dataset.price); });
         totalDisplay.innerText = total.toLocaleString('ru-RU');
+        
+        // Новая проверка:
+        const isConfirmed = confirmCheck.checked;
+        const isAnyServiceSelected = total > 0;
+        const contactValue = document.getElementById('user-contact').value.trim();
+        const isContactFilled = contactValue.length > 5; // Минимум 5 символа в контакте
+
+        // Кнопка активна, только если выполнены все 3 условия
+        payBtn.disabled = !(isConfirmed && isAnyServiceSelected && isContactFilled);
     }
 
-    // Функция отправки (ОТПРАВЛЯЕТ ВАМ ЗАКАЗ)
-    function sendToTelegram() {
+    async function sendOrder() {
         let selected = [];
         let total = 0;
-        
         checks.forEach(c => { 
             if(c.checked) {
-                // Ищем текст внутри родительского элемента
-                let name = c.parentElement.querySelector('.service-name').innerText;
-                selected.push(name);
+                selected.push(`${c.dataset.name} - ${parseInt(c.dataset.price).toLocaleString('ru-RU')} ₽`);
                 total += parseInt(c.dataset.price);
             }
         });
-
-        const messageText = "Здравствуйте, Надежда! Мой заказ в Точке Свободы:\n- " + selected.join('\n- ') + "\n\nИтого: " + total + " руб.\nС Офертой согласен(а).";
-        const encodedMessage = encodeURIComponent(messageText);
         
-        // ВАШ НИК NM_13_31
-        window.location.href = "https://NM_13_31" + encodedMessage;
+        if (selected.length === 0 || !confirmCheck.checked) return;
+        
+        payBtn.disabled = true;
+        payBtn.classList.add('loading');
+        payBtn.textContent = 'Отправка...';
+        
+        const userInfo = getTelegramUserInfo();
+        const date = new Date().toLocaleString('ru-RU');
+        
+        // Получаем значение из нового поля ввода
+        const contactInput = document.getElementById('user-contact').value;
+
+        let message = `🆕 <b>НОВЫЙ ЗАКАЗ!</b>\n\n`;
+        message += `⏰ <b>Время:</b> ${date}\n`;
+        
+        // Добавляем контакт из поля ввода
+        message += `📱 <b>Контакт:</b> ${contactInput || 'Не указан'}\n`;
+        
+        if (userInfo) {
+            message += `👤 <b>TG-профиль:</b> <a href="tg://user?id=${userInfo.id}">${userInfo.name}</a>\n`;
+        }
+
+        message += `\n📋 <b>Услуги:</b>\n`;
+        message += selected.map(item => `• ${item}`).join('\n');
+        message += `\n\n💰 <b>ИТОГО:</b> ${total.toLocaleString('ru-RU')} ₽\n`;
+        message += `\n\n<i>Клиент уведомлен, что вы скоро свяжетесь.</i>`;
+        try {
+            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHANNEL_ID,
+                    text: message,
+                    parse_mode: 'HTML',
+                    disable_web_page_preview: true
+                })
+            });
+            
+            if (!response.ok) throw new Error('Ошибка API');
+            
+            showStatus("✅ Заказ успешно отправлен!", "success");
+            payBtn.textContent = 'Спасибо! Ваша заявка получена. Я отвечу вам в ближайшее время. ✓';
+            payBtn.classList.remove('loading');
+            payBtn.style.background = 'linear-gradient(135deg, #32CD32 0%, #00CED1 100%)';
+            payBtn.style.opacity = '1';
+            payBtn.disabled = true;
+
+            setTimeout(() => {
+                // Снимаем все галочки и очищаем поле контакта
+                checks.forEach(c => c.checked = false);
+                confirmCheck.checked = false;
+                if(document.getElementById('user-contact')) {
+                    document.getElementById('user-contact').value = '';
+                }
+                payBtn.textContent = 'Предварительный заказ';
+                payBtn.style.background = ''; 
+                payBtn.style.opacity = '';
+                
+                updatePrice(); // Обновляем состояние (кнопка заблокируется сама)
+                
+                // Скрываем зеленое уведомление
+                statusDiv.style.display = 'none';
+            }, 8000);
+            
+        } catch (error) {
+            showStatus(`❌ Ошибка отправки. Проверьте настройки бота.`, "error");
+            payBtn.disabled = false;
+            payBtn.classList.remove('loading');
+            payBtn.textContent = 'Предварительный заказ';
+        }
     }
-
+    
+    function getTelegramUserInfo() {
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe.user) {
+            const user = window.Telegram.WebApp.initDataUnsafe.user;
+            return {
+                id: user.id,
+                name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username
+            };
+        }
+        return null;
+    }
+    
+    // Подключение скрипта Telegram Web App
+    const tgScript = document.createElement('script');
+    tgScript.src = 'https://telegram.org/js/telegram-web-app.js';
+    tgScript.onload = () => { if (window.Telegram?.WebApp) window.Telegram.WebApp.ready(); };
+    document.head.appendChild(tgScript);
+    
     checks.forEach(c => c.addEventListener('change', updatePrice));
-    confirmCheck.addEventListener('change', () => payBtn.disabled = !confirmCheck.checked);
-</script>
+    confirmCheck.addEventListener('change', updatePrice);
+    payBtn.addEventListener('click', sendOrder);
+    document.getElementById('user-contact').addEventListener('input', updatePrice);
 
-</body>
-</html>
+    updatePrice();
+</script>
