@@ -333,10 +333,6 @@
     window.addEventListener('pageshow', updatePrice);
     window.onfocus = updatePrice;
     window.addEventListener('focus', updatePrice); // Пересчитать, когда вернулись во вкладку
-    
-    // Запуск при старте
-    document.addEventListener('DOMContentLoaded', updatePrice);
-    updatePrice(); 
 
         window.addEventListener('load', () => {
         // 1. Восстанавливаем галочки
@@ -358,4 +354,7 @@
         updatePrice();
     });
 });
+
+window.onfocus = updatePrice;
+
 </script>
