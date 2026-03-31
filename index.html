@@ -198,28 +198,36 @@
     const contactInput = document.getElementById('user-contact');
     
     if (!totalDisplay) return; 
-        let total = 0;
-        checks.forEach(c => { if(c.checked) total += parseInt(c.dataset.price); });
-        totalDisplay.innerText = total.toLocaleString('ru-RU');
-        
-        // Новая проверка:
-        const isConfirmed = confirmCheck.checked;
-        const isAnyServiceSelected = total > 0;
-        const contactValue = document.getElementById('user-contact').value.trim();
-        const isContactFilled = contactValue.length > 5; // Минимум 5 символа в контакте
 
-        // Кнопка активна, только если выполнены все 3 условия
-        payBtn.disabled = !(isConfirmed && isAnyServiceSelected && isContactFilled);
+    let total = 0;
+    checks.forEach(c => { 
+        if(c.checked) total += parseInt(c.dataset.price) || 0; 
+    });
+    
+    totalDisplay.innerText = total.toLocaleString('ru-RU');
+    
+    const isConfirmed = confirmCheck ? confirmCheck.checked : false;
+    const isAnyServiceSelected = total > 0;
+    const contactValue = contactInput ? contactInput.value.trim() : "";
+    const isContactFilled = contactValue.length > 5;
 
-        // Сохраняем состояние галочек
-        const selectedIds = Array.from(checks).filter(c => c.checked).map(c => c.dataset.name);
-        localStorage.setItem('savedServices', JSON.stringify(selectedIds));
+    payBtn.disabled = !(isConfirmed && isAnyServiceSelected && isContactFilled);
+
+    // СОХРАНЕНИЕ В ПАМЯТЬ (Исправлено)
+    const selectedServices = Array.from(checks)
+        .filter(c => c.checked)
+        .map(c => c.dataset.name);
+    
+    localStorage.setItem('savedServices', JSON.stringify(selectedServices));
+    
+    if (contactInput) {
         localStorage.setItem('savedContact', contactInput.value);
-
-        const contactField = document.getElementById('user-contact');
-        if (contactField) localStorage.setItem('savedContact', contactField.value);
-
     }
+    
+    if (confirmCheck) {
+        localStorage.setItem('savedConfirm', confirmCheck.checked);
+    }
+}
 
     async function sendOrder() {
         let selected = [];
@@ -303,39 +311,30 @@
         }
     }
     
-    function getTelegramUserInfo() {
-        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe.user) {
-            const user = window.Telegram.WebApp.initDataUnsafe.user;
-            return {
-                id: user.id,
-                name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username
-            };
-        }
-        return null;
-    }
-    
-    // Подключение скрипта Telegram Web App
+       // Подключение скрипта Telegram Web App
     const tgScript = document.createElement('script');
     tgScript.src = 'https://telegram.org/js/telegram-web-app.js';
     tgScript.onload = () => { if (window.Telegram?.WebApp) window.Telegram.WebApp.ready(); };
     document.head.appendChild(tgScript);
     
+    // ПРИВЯЗКА СОБЫТИЙ
     checks.forEach(c => c.addEventListener('change', updatePrice));
     confirmCheck.addEventListener('change', updatePrice);
     payBtn.addEventListener('click', sendOrder);
+
+        // ... здесь заканчиваются твои функции и обработчики ...
 
     const contactInput = document.getElementById('user-contact');
     if (contactInput) {
         contactInput.addEventListener('input', updatePrice);
     }
 
-    // ЛЕКАРСТВО ОТ "ЗАВИСАНИЯ" ПОСЛЕ АНКЕТЫ:
+    // ЛЕКАРСТВО ОТ "ЗАВИСАНИЯ"
     window.addEventListener('pageshow', updatePrice);
     window.onfocus = updatePrice;
-    window.addEventListener('focus', updatePrice); // Пересчитать, когда вернулись во вкладку
-
-        window.addEventListener('load', () => {
-        // 1. Восстанавливаем галочки
+    
+    // БЛОК ВОССТАНОВЛЕНИЯ ПАМЯТИ
+    const restoreData = () => {
         const saved = JSON.parse(localStorage.getItem('savedServices') || '[]');
         document.querySelectorAll('.service').forEach(c => {
             if (saved.includes(c.dataset.name)) {
@@ -343,18 +342,23 @@
             }
         });
 
-        // 2. Восстанавливаем контакт
         const savedContact = localStorage.getItem('savedContact');
-        const contactField = document.getElementById('user-contact');
-        if (savedContact && contactField) {
-            contactField.value = savedContact;
+        if (savedContact && contactInput) {
+            contactInput.value = savedContact;
         }
 
-        // 3. Пинкуем калькулятор, чтобы он пересчитал сумму
-        updatePrice();
-    });
-});
+        const savedConfirm = localStorage.getItem('savedConfirm') === 'true';
+        if (confirmCheck) {
+            confirmCheck.checked = savedConfirm;
+        }
 
-window.onfocus = updatePrice;
+        updatePrice(); // Пересчитываем сумму после восстановления
+    };
+
+    // Запускаем восстановление сразу
+    restoreData();
+
+    // ВОТ ТВОЯ ЗАКРЫВАЮЩАЯ СКОБКА ДЛЯ DOMContentLoaded:
+    }); 
 
 </script>
