@@ -171,6 +171,7 @@
 <script src="config.js"></script> <!-- Подключаем ваши секретные данные -->
 
 <script>
+    window.addEventListener('DOMContentLoaded', () => {
     // Берем данные из файла config.js
     const BOT_TOKEN = CONFIG.BOT_TOKEN;
     const CHANNEL_ID = CONFIG.CHANNEL_ID;
@@ -356,5 +357,5 @@
         // 3. Пинкуем калькулятор, чтобы он пересчитал сумму
         updatePrice();
     });
-
+});
 </script>
