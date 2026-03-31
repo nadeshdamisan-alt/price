@@ -123,7 +123,7 @@
         <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-name="Маршрут мили" data-price="1000"><span class="service-name">Маршрут «Первой мили» из точки А в точку В</span><span class="service-price">1 000 ₽</span></label></div>
         <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-name="Подбор страховки" data-price="1000"><span class="service-name">Подбор страхового полиса</span><span class="service-price">1 000 ₽</span></label></div>
         <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-name="Поиск перелета" data-price="1500"><span class="service-name">Анализ и подбор перелета</span><span class="service-price">1 500 ₽</span></label></div>
-        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-name="Анализ и аудит" data-price="1500"><span class="service-name">Анализ и аудит</span><span class="service-price">2 500 ₽</span></label></div>
+        <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-name="Анализ и аудит" data-price="2500"><span class="service-name">Анализ и аудит</span><span class="service-price">2 500 ₽</span></label></div>
         <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-name="Подбор вариантов отеля" data-price="3500"><span class="service-name">Подбор вариантов отеля по ТЗ</span><span class="service-price">3 500 ₽</span></label></div>
         <div class="service-item"><label style="display:contents"><input type="checkbox" class="service" data-name="Ассистент бронирования" data-price="5000"><span class="service-name">Тех. ассистент при бронировании</span><span class="service-price">5 000 ₽</span></label></div>
         
@@ -131,10 +131,10 @@
 <!-- ВСТАВЛЯЕМ БЛОК С АНКЕТОЙ ТУТ -->
     <div style="margin-top: 20px; padding: 15px; background: rgba(49, 130, 206, 0.1); border-radius: 15px; border: 1px dashed #3182ce;">
         <p style="margin: 0 0 10px 0; font-size: 13px; color: #2c5282; text-align: center; font-weight: 600;">
-            ✈️ Для более качественного оказания услуги, заполните анкету:
+            ✈️ Для более качественного оказания услуги, пожалуйста заполните анкету:
         </p>
         <a href="https://forms.gle/BePKrmQsfBxxudpn9" target="_blank" style="display: block; text-align: center; background: #3182ce; color: white; padding: 10px; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 700; transition: 0.3s;">
-            📋 Заполнить анкету путешественника
+            📋 Анкета путешественника
         </a>
     </div>
 
@@ -168,8 +168,6 @@
     <div id="status" class="status"></div>
 </div>
 
-<script src="config.js"></script>
-
 <script src="config.js"></script> <!-- Подключаем ваши секретные данные -->
 
 <script>
@@ -191,7 +189,14 @@
         }, 5000);
     }
     
-        function updatePrice() {
+    function updatePrice() {
+    const checks = document.querySelectorAll('.service');
+    const totalDisplay = document.getElementById('amount');
+    const confirmCheck = document.getElementById('confirm');
+    const payBtn = document.getElementById('pay-btn');
+    const contactInput = document.getElementById('user-contact');
+    
+    if (!totalDisplay) return; 
         let total = 0;
         checks.forEach(c => { if(c.checked) total += parseInt(c.dataset.price); });
         totalDisplay.innerText = total.toLocaleString('ru-RU');
@@ -204,6 +209,15 @@
 
         // Кнопка активна, только если выполнены все 3 условия
         payBtn.disabled = !(isConfirmed && isAnyServiceSelected && isContactFilled);
+
+        // Сохраняем состояние галочек
+        const selectedIds = Array.from(checks).filter(c => c.checked).map(c => c.dataset.name);
+        localStorage.setItem('savedServices', JSON.stringify(selectedIds));
+        localStorage.setItem('savedContact', contactInput.value);
+
+        const contactField = document.getElementById('user-contact');
+        if (contactField) localStorage.setItem('savedContact', contactField.value);
+
     }
 
     async function sendOrder() {
@@ -267,9 +281,9 @@
                 // Снимаем все галочки и очищаем поле контакта
                 checks.forEach(c => c.checked = false);
                 confirmCheck.checked = false;
-                if(document.getElementById('user-contact')) {
-                    document.getElementById('user-contact').value = '';
-                }
+                const contactField = document.getElementById('user-contact');
+                if(contactField) contactField.value = '';
+                
                 payBtn.textContent = 'Предварительный заказ';
                 payBtn.style.background = ''; 
                 payBtn.style.opacity = '';
@@ -308,7 +322,39 @@
     checks.forEach(c => c.addEventListener('change', updatePrice));
     confirmCheck.addEventListener('change', updatePrice);
     payBtn.addEventListener('click', sendOrder);
-    document.getElementById('user-contact').addEventListener('input', updatePrice);
 
-    updatePrice();
+    const contactInput = document.getElementById('user-contact');
+    if (contactInput) {
+        contactInput.addEventListener('input', updatePrice);
+    }
+
+    // ЛЕКАРСТВО ОТ "ЗАВИСАНИЯ" ПОСЛЕ АНКЕТЫ:
+    window.addEventListener('pageshow', updatePrice);
+    window.onfocus = updatePrice;
+    window.addEventListener('focus', updatePrice); // Пересчитать, когда вернулись во вкладку
+    
+    // Запуск при старте
+    document.addEventListener('DOMContentLoaded', updatePrice);
+    updatePrice(); 
+
+        window.addEventListener('load', () => {
+        // 1. Восстанавливаем галочки
+        const saved = JSON.parse(localStorage.getItem('savedServices') || '[]');
+        document.querySelectorAll('.service').forEach(c => {
+            if (saved.includes(c.dataset.name)) {
+                c.checked = true;
+            }
+        });
+
+        // 2. Восстанавливаем контакт
+        const savedContact = localStorage.getItem('savedContact');
+        const contactField = document.getElementById('user-contact');
+        if (savedContact && contactField) {
+            contactField.value = savedContact;
+        }
+
+        // 3. Пинкуем калькулятор, чтобы он пересчитал сумму
+        updatePrice();
+    });
+
 </script>
